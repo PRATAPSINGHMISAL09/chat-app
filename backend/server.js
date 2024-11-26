@@ -8,8 +8,12 @@ const PORT = process.env.PORT || 5000 ;
 
 
 app.get("/", (req,res)=>{
+    
+});
 
-})
+app.get("/api/auth/signup", (req,res)=>{
+    
+});
 
 
 app.listen(PORT, ()=> console.log(`Server running on PORT ${PORT}`));
