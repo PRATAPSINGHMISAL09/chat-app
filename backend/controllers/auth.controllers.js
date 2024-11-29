@@ -1,5 +1,5 @@
 import User from "../models/user.model.js";
-import bcryptjs from "bcryptjs"
+import bcryptjs from "bcryptjs";
 import generatetokenandgetcookie from "../utils/generateToken.js";
 
 //  SIGNUP ENDPOINT
@@ -20,7 +20,7 @@ export const signup = async (req,res) =>{
         }
 
 
-        const salt = await bcryptjs.genSalt(10); //hashing the password with salt
+        const salt = await bcryptjs.genSalt(12); //hashing the password with salt
         const hashedpassword = await bcryptjs.hash(password,salt); //actually hashing
 
 
@@ -60,15 +60,42 @@ export const signup = async (req,res) =>{
 
 
 
+//  LOGIN ROUTE
+export const login = async (req,res) =>{
+    try {
+    const {username , password} = req.body; // taking username and pass from body
+    const user = await User.findOne({username}); //checking if username is unique
+    const isPassword = await bcryptjs.compare(password,user?.password || ""); // checking if password match
+    if(!user || !isPassword){
+        res.status(400).json("Invalid username or password");
+    }
 
-export const login = (req,res) =>{
-    res.send("LoginUser")
-    console.log("loginUser");
+    generatetokenandgetcookie(user._id,res);
+
+    res.status(200).json({
+        _id: user._id,
+        fullname: user.fullname,
+        username: user.username,
+        profilepic:user.profilepic
+    });
+
+    } catch (error) {
+        console.log("Error in login controller",error.message);
+        res.status(500).json({error:"Internal Server Error"});
+        
+    }
 }
 
 
 
-
+//  LOGOUT ROUTE
 export const logout = (req,res) =>{
-    console.log("logoutUser")
+    try {
+        res.cookie("jwt", "", { maxAge: 0, httpOnly: true, secure: true });
+        res.status(200).json({ message: "Logged out successfully" });
+    } catch (error) {
+    console.log("Error in login controller",error.message);
+    res.status(500).json({error:"Internal Server Error"});
+        
+    }
 }
