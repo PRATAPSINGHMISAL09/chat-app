@@ -1,3 +1,6 @@
+//INDIVIDUAL CONVERSATION
+
+
 import React from 'react'
 
 function Convo() {
@@ -8,10 +11,14 @@ function Convo() {
             <img src="" alt="user avatar" />
         </div>
     </div>
-    <div>
-        
+    <div className='flex flex-col flex-1'>
+        <div className='flex gap-3 justify-between'>
+          <p className='font-bold text-gray-200'>John Doe</p>
+        </div>
     </div>
   </div>
+
+  <div className='divider my-0 py-0 h-1'/>
   </>
 }
 
