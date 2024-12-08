@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './App.css'
+import './index.css'
 import Login from './pages/login/Login'
 import Signup from './pages/signup/Signup'
 import Homepage from './pages/home/Homepage.jsx'
