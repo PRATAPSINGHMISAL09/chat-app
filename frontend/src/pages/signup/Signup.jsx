@@ -1,27 +1,26 @@
 import { Link } from "react-router-dom";
 import GenderCheckbox from "./GenderCheckbox";
 import { useState } from "react";
+import useSignup from "../../hooks/useSignup";
 
 const Signup = () => {
   const [inputs, setInputs] = useState({
     fullname: "",
     username: "",
     password: "",
-    confirmPassword: "",
+    confirmpassword: "",
     gender: "",
   });
+
+  const {loading,signup} = useSignup();
 
   const handleCheckboxChange = (gender) => {
     setInputs({ ...inputs, gender });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!inputs.gender) {
-      alert("Please select a gender!");
-      return;
-    }
-    console.log("Form submitted:", inputs);
+    await signup(inputs);
   };
 
   return (
@@ -75,16 +74,16 @@ const Signup = () => {
           </div>
 
           <div>
-            <label htmlFor="confirmPassword" className="label">
+            <label htmlFor="confirmpassword" className="label">
               <span className="text-base label-text text-zinc-300">Confirm Password</span>
             </label>
             <input
-              id="confirmPassword"
+              id="confirmpassword"
               type="password"
               placeholder="Confirm password"
               className="input input-bordered input-info w-full max-w-xs"
-              value={inputs.confirmPassword}
-              onChange={(e) => setInputs({ ...inputs, confirmPassword: e.target.value })}
+              value={inputs.confirmpassword}
+              onChange={(e) => setInputs({ ...inputs, confirmpassword: e.target.value })}
             />
           </div>
 
@@ -104,8 +103,9 @@ const Signup = () => {
           </Link>
 
           <div>
-            <button type="submit" className="btn btn-block btn-sm mt-4 max-w-xs">
-              Signup
+            <button type="submit" className="btn btn-block btn-sm mt-4 max-w-xs"
+            disabled={loading}>
+              {loading ?  <span className="loading loading-spinner"></span> : "Sign up"}
             </button>
           </div>
         </form>

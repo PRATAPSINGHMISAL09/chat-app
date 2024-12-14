@@ -61,31 +61,35 @@ export const signup = async (req,res) =>{
 
 
 //  LOGIN ROUTE
-export const login = async (req,res) =>{
+export const login = async (req, res) => {
     try {
-    const {username , password} = req.body; // taking username and pass from body
-    const user = await User.findOne({username}); //checking if username is unique
-    const isPassword = await bcryptjs.compare(password,user?.password || ""); // checking if password match
-    if(!user || !isPassword){
-        res.status(400).json("Invalid username or password");
-    }
+        const { username, password } = req.body; 
+        const user = await User.findOne({ username });
 
-    generatetokenandgetcookie(user._id,res);
+        if (!user) {
+            return res.status(400).json("Invalid username or password");
+        }
 
-    res.status(200).json({
-        _id: user._id,
-        fullname: user.fullname,
-        username: user.username,
-        profilepic:user.profilepic
-    });
+        const isPassword = await bcryptjs.compare(password, user?.password || "");
+
+        if (!isPassword) {
+            return res.status(400).json("Invalid username or password");
+        }
+
+        generatetokenandgetcookie(user._id, res);
+
+        return res.status(200).json({
+            _id: user._id,
+            fullname: user.fullname,
+            username: user.username,
+            profilepic: user.profilepic
+        });
 
     } catch (error) {
-        console.log("Error in login controller",error.message);
-        res.status(500).json({error:"Internal Server Error"});
-        
+        console.log("Error in login controller", error.message);
+        return res.status(500).json({ error: "Internal Server Error" });
     }
-}
-
+};
 
 
 //  LOGOUT ROUTE
