@@ -1,4 +1,4 @@
-import SearchInput from "./SearchInput"
+import SearchInput from "./Searchinput.jsx"
 import Conversations from "./Conversations.jsx"
 import Logoutbtn from "./Logoutbtn.jsx"
 function Sidebar() {
