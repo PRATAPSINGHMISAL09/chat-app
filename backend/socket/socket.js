@@ -14,9 +14,9 @@ const io = new Server(server, {
     }
 });
 
-export const getReceiverSocketId = (receiverId) => userSocketMap[receiverId];
-
 const userSocketMap = {}; // { userId: socketId }
+
+export const getReceiverSocketId = (receiverId) => userSocketMap[receiverId];
 
 io.on("connection", (socket) => {
     console.log("User Connected:", socket.id);
@@ -29,6 +29,17 @@ io.on("connection", (socket) => {
     } else {
         console.warn("Warning: userId is missing in handshake auth");
     }
+
+    // Handle sending messages
+    socket.on("sendMessage", ({ senderId, receiverId, message }) => {
+        console.log(`Message from ${senderId} to ${receiverId}:`, message);
+
+        const receiverSocketId = userSocketMap[receiverId];
+
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit("receiveMessage", { senderId, receiverId, message });
+        }
+    });
 
     socket.on("disconnect", () => {
         console.log("User Disconnected:", socket.id);
